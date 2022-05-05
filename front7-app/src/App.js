@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Header from "./components/Header";
+import axios from "axios";
+import Grid from "./components/games/Grid";
 
 function App() {
+  const [games, setGames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      setIsLoading(true)
+      const result = await axios(`https://game-api7.herokuapp.com/api/games`);
+
+      console.log(result.data);
+      setGames(result.data);
+      setIsLoading(false);
+    };
+
+    fetchGames();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Header />
+      <Grid isLoading={isLoading} games={games} />
     </div>
   );
 }
